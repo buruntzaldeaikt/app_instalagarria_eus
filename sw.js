@@ -3,7 +3,7 @@ self.addEventListener('install', (e) => {
         caches.open('buruntzaldea-store').then((cache) => cache.addAll([
             './index.html',
             './manifest.json',
-            './icons/unnamed.png',
+            './unnamed.png',
         ])),
     );
 });
