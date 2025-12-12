@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Buruntzaldea IKT</title>
+    <title>Buruntzaldea IKT App</title>
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#005BAC">
     <style>
@@ -31,7 +31,7 @@
         }
 
         h1 {
-            margin-bottom: 40px;
+            margin-bottom: 20px;
         }
 
         .button {
@@ -44,10 +44,22 @@
             font-size: 1.2rem;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
             transition: transform 0.1s;
+            margin: 10px;
+            border: none;
+            cursor: pointer;
+            display: inline-block;
         }
 
         .button:active {
             transform: scale(0.95);
+        }
+
+        #installBtn {
+            display: none;
+            /* Hasieran ezkutatuta */
+            background-color: #FFC107;
+            /* Horia nabarmentzeko */
+            color: #000;
         }
     </style>
 </head>
@@ -55,13 +67,54 @@
 <body>
     <img src="unnamed.png" alt="BIKT Logo" class="logo">
     <h1>Ongi Etorri Buruntzaldea IKT-ra</h1>
-    <a href="https://www.buruntzaldeaikt.eus/" class="button" target="_blank" rel="noopener noreferrer">Joan
-        Webgunera</a>
+
+    <!-- Webgunearen botoia -->
+    <a href="https://www.buruntzaldeaikt.eus/" class="button" target="_blank" rel="noopener noreferrer">
+        Joan Webgunera
+    </a>
+
+    <!-- Instalazio botoia (Javascript bidez agertuko da) -->
+    <button id="installBtn" class="button">Instalatu Aplikazioa</button>
 
     <script>
+        // Service Worker Erregistroa
         if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('sw.js');
+            navigator.serviceWorker.register('sw.js')
+                .then(reg => console.log('SW erregistratuta:', reg))
+                .catch(err => console.log('SW errorea:', err));
         }
+
+        // PWA Instalazio Logika
+        let deferredPrompt;
+        const installBtn = document.getElementById('installBtn');
+
+        window.addEventListener('beforeinstallprompt', (e) => {
+            // Chrome-k automatikoki ez erakusteko
+            e.preventDefault();
+            // Gertaera gorde gero erabiltzeko
+            deferredPrompt = e;
+            // Botoia erakutsi
+            installBtn.style.display = 'block';
+            console.log('Instalazioa prest!');
+        });
+
+        installBtn.addEventListener('click', async () => {
+            if (deferredPrompt) {
+                // Instalazio prompt-a erakutsi
+                deferredPrompt.prompt();
+                // Erabiltzailearen erantzuna itxaron
+                const { outcome } = await deferredPrompt.userChoice;
+                console.log('Erabiltzailearen aukera:', outcome);
+                // Erabili ondoren garbitu
+                deferredPrompt = null;
+                installBtn.style.display = 'none';
+            }
+        });
+
+        window.addEventListener('appinstalled', () => {
+            console.log('Aplikazioa instalatu da');
+            installBtn.style.display = 'none';
+        });
     </script>
 </body>
 
