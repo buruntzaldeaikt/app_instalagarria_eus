@@ -56,64 +56,93 @@
 
         #installBtn {
             display: none;
-            /* Hasieran ezkutatuta */
             background-color: #FFC107;
-            /* Horia nabarmentzeko */
             color: #000;
+        }
+
+        #content {
+            display: none;
+            /* Edukia ezkutatuta hasieran */
+        }
+
+        #loading {
+            font-size: 1.5rem;
+            font-weight: bold;
         }
     </style>
 </head>
 
 <body>
-    <img src="unnamed.png" alt="BIKT Logo" class="logo">
-    <h1>Ongi Etorri Buruntzaldea IKT-ra</h1>
 
-    <!-- Webgunearen botoia -->
-    <a href="https://www.buruntzaldeaikt.eus/" class="button" target="_blank" rel="noopener noreferrer">
-        Joan Webgunera
-    </a>
+    <!-- Loading Mezua (Redirect prozesuan) -->
+    <div id="loading">
+        <img src="unnamed.png" alt="BIKT Logo" class="logo"><br>
+        Kargatzen...
+    </div>
 
-    <!-- Instalazio botoia (Javascript bidez agertuko da) -->
-    <button id="installBtn" class="button">Instalatu Aplikazioa</button>
+    <!-- Instalazio Pantaila (Nabigatzailean bakarrik) -->
+    <div id="content">
+        <img src="unnamed.png" alt="BIKT Logo" class="logo">
+        <h1>Buruntzaldea IKT</h1>
+        <p>Instalatu aplikazioa mugikorrean edukitzeko.</p>
+
+        <!-- Webgunearen botoia -->
+        <a href="https://www.buruntzaldeaikt.eus/" class="button" target="_blank" rel="noopener noreferrer">
+            Webgunea Ireki
+        </a>
+
+        <!-- Instalazio botoia -->
+        <button id="installBtn" class="button">Instalatu Aplikazioa</button>
+    </div>
 
     <script>
-        // Service Worker Erregistroa
+        // --- LOGIKA NAGUSIA ---
+
+        // 1. Service Worker beti erregistratu
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker.register('sw.js')
-                .then(reg => console.log('SW erregistratuta:', reg))
-                .catch(err => console.log('SW errorea:', err));
+                .then(reg => console.log('SW prest'))
+                .catch(err => console.log('SW errorea', err));
         }
 
-        // PWA Instalazio Logika
+        // 2. Detektatu Standalone modua (Instalatutako App-a)
+        const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+
+        if (isStandalone) {
+            // APLIKAZIOA DA: Zuzenean webgunera bidali
+            console.log('Standalone modua: Birbideratzen...');
+            window.location.replace("https://www.buruntzaldeaikt.eus/");
+        } else {
+            // NABIGATZAILEA DA: Instalazio interfazea erakutsi
+            console.log('Nabigatzaile modua: Launcher erakusten');
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('content').style.display = 'flex';
+            document.getElementById('content').style.flexDirection = 'column';
+            document.getElementById('content').style.alignItems = 'center';
+        }
+
+        // 3. Instalazio Gertaerak (Chrome/Android)
         let deferredPrompt;
         const installBtn = document.getElementById('installBtn');
 
         window.addEventListener('beforeinstallprompt', (e) => {
-            // Chrome-k automatikoki ez erakusteko
             e.preventDefault();
-            // Gertaera gorde gero erabiltzeko
             deferredPrompt = e;
-            // Botoia erakutsi
-            installBtn.style.display = 'block';
-            console.log('Instalazioa prest!');
+            installBtn.style.display = 'block'; // Botoia erakutsi aukera dagoenean
         });
 
         installBtn.addEventListener('click', async () => {
             if (deferredPrompt) {
-                // Instalazio prompt-a erakutsi
                 deferredPrompt.prompt();
-                // Erabiltzailearen erantzuna itxaron
                 const { outcome } = await deferredPrompt.userChoice;
-                console.log('Erabiltzailearen aukera:', outcome);
-                // Erabili ondoren garbitu
                 deferredPrompt = null;
                 installBtn.style.display = 'none';
             }
         });
 
         window.addEventListener('appinstalled', () => {
-            console.log('Aplikazioa instalatu da');
             installBtn.style.display = 'none';
+            alert("Aplikazioa instalatu da! Orain hasierako pantailatik ireki dezakezu.");
         });
     </script>
 </body>
