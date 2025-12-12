@@ -1,4 +1,4 @@
-const CACHE_NAME = 'buruntzaldea-v2';
+const CACHE_NAME = 'buruntzaldea-v3';
 const ASSETS = [
     './',
     './index.html',
