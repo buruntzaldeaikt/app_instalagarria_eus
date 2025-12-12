@@ -1,0 +1,16 @@
+{
+  "name": "Buruntzaldea IKT",
+  "short_name": "Buruntzaldea",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#005BAC",
+  "theme_color": "#005BAC",
+  "icons": [
+    {
+      "src": "icons/logo.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
