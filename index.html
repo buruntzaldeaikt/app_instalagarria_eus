@@ -1,33 +1,68 @@
 <!DOCTYPE html>
 <html lang="eu">
+
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Buruntzaldea IKT</title>
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#005BAC">
     <style>
-        body, html {
-            margin: 0;
-            padding: 0;
-            height: 100%;
-            overflow: hidden;
+        body {
+            font-family: Arial, sans-serif;
             background-color: #005BAC;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            text-align: center;
         }
-        iframe {
-            width: 100%;
-            height: 100%;
-            border: none;
-            display: block;
+
+        .logo {
+            width: 150px;
+            height: 150px;
+            margin-bottom: 20px;
+            background-color: white;
+            border-radius: 20px;
+            padding: 10px;
+        }
+
+        h1 {
+            margin-bottom: 40px;
+        }
+
+        .button {
+            background-color: white;
+            color: #005BAC;
+            padding: 15px 30px;
+            text-decoration: none;
+            font-weight: bold;
+            border-radius: 30px;
+            font-size: 1.2rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+            transition: transform 0.1s;
+        }
+
+        .button:active {
+            transform: scale(0.95);
         }
     </style>
 </head>
+
 <body>
-    <iframe src="https://www.buruntzaldeaikt.eus/" title="Buruntzaldea IKT"></iframe>
+    <img src="icons/logo.svg" alt="BIKT Logo" class="logo">
+    <h1>Ongi Etorri Buruntzaldea IKT-ra</h1>
+    <a href="https://www.buruntzaldeaikt.eus/" class="button" target="_blank" rel="noopener noreferrer">Joan
+        Webgunera</a>
+
     <script>
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker.register('sw.js');
         }
     </script>
 </body>
+
 </html>
